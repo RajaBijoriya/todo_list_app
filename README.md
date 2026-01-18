@@ -151,6 +151,86 @@ CREATE TABLE todos (
 
 ---
 
+---
+
+## Deployment
+
+### Frontend Deployment (Vercel)
+
+1. **Connect your GitHub repository to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project" and import your GitHub repository
+   - Select the root directory as project root
+
+2. **Configure Build Settings**
+   - Build Command: `cd frontend && npm install && npm run build`
+   - Output Directory: `frontend/dist`
+
+3. **Set Environment Variables**
+   - Go to Project Settings → Environment Variables
+   - Add `VITE_API_URL` with your backend API URL (see below)
+
+4. **Deploy**
+   - Click "Deploy"
+   - Vercel will automatically deploy on every push to main
+
+### Backend Deployment (Railway, Heroku, or Similar)
+
+#### Option 1: Railway (Recommended)
+
+1. Go to [railway.app](https://railway.app)
+2. Click "New Project" → "Deploy from GitHub"
+3. Select your repository
+4. Configure:
+   - **Root Directory:** `backend`
+   - **Build Command:** `composer install && php artisan migrate`
+   - **Start Command:** `php artisan serve --port=$PORT`
+
+5. Set Environment Variables:
+   ```
+   APP_ENV=production
+   APP_DEBUG=false
+   DB_CONNECTION=mysql
+   DB_HOST=<your-db-host>
+   DB_DATABASE=<your-db-name>
+   DB_USERNAME=<your-db-user>
+   DB_PASSWORD=<your-db-password>
+   ```
+
+6. After deployment, copy the backend URL and add it to Vercel's `VITE_API_URL`
+
+#### Option 2: Heroku
+
+```bash
+# Login to Heroku
+heroku login
+
+# Create Heroku app
+heroku create your-app-name
+
+# Set environment variables
+heroku config:set APP_KEY=<generate-with-php-artisan-key:generate>
+heroku config:set APP_ENV=production
+heroku config:set APP_DEBUG=false
+
+# Deploy
+git push heroku main
+```
+
+### Updating API URL After Deployment
+
+Once your backend is deployed (Railway/Heroku):
+
+1. Go to Vercel Project Settings
+2. Environment Variables
+3. Update `VITE_API_URL` to your backend's deployed URL:
+   ```
+   https://your-backend.railway.app/api
+   ```
+4. Redeploy frontend on Vercel
+
+---
+
 ## Build for Production
 
 ### Frontend Build
